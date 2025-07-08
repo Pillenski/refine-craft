@@ -1,9 +1,13 @@
 import React from "react";
-
 import { Edit, useForm, useSelect } from "@refinedev/antd";
-
-import { Form, Input, Select } from "antd";
-
+import { Form } from "antd";
+import { Editor, Frame, Element } from "@craftjs/core";
+import { Toolbox } from "../../components/crafttoolbox";
+import {
+  DragContainer,
+  DragInputField,
+  DragSelectField,
+} from "../../components/craftnodes";
 import type { IPost, ICategory } from "../../interfaces";
 
 export const PostEdit = () => {
@@ -17,66 +21,31 @@ export const PostEdit = () => {
 
   return (
     <Edit saveButtonProps={saveButtonProps}>
-      <Form {...formProps} layout="vertical">
-        <Form.Item
-          label="Title"
-          name="title"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Category"
-          name={["category", "id"]}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select {...categorySelectProps} />
-        </Form.Item>
-        <Form.Item
-          label="Status"
-          name="status"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select
-            options={[
-              {
-                label: "Published",
-                value: "published",
-              },
-              {
-                label: "Draft",
-                value: "draft",
-              },
-              {
-                label: "Rejected",
-                value: "rejected",
-              },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item
-          label="Content"
-          name="content"
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-        </Form.Item>
-      </Form>
+      <Toolbox />
+      <Editor resolver={{ DragContainer, DragInputField, DragSelectField }}>
+        <Frame>
+          <Element is={DragContainer} canvas>
+            <Form {...formProps} layout="vertical">
+              <DragInputField label="Title" name="title" />
+              <DragSelectField
+                label="Category"
+                name={["category", "id"]}
+                options={categorySelectProps.options || []}
+              />
+              <DragSelectField
+                label="Status"
+                name="status"
+                options={[
+                  { label: "Published", value: "published" },
+                  { label: "Draft", value: "draft" },
+                  { label: "Rejected", value: "rejected" },
+                ]}
+              />
+              <DragInputField label="Content" name="content" />
+            </Form>
+          </Element>
+        </Frame>
+      </Editor>
     </Edit>
   );
 };
